@@ -76,11 +76,13 @@ def classify_news():
     s = session()
     rows = s.query(News).filter(News.label == None).all()
     classified_news = []
-    prediction = []
-    for i in rows:
-        prediction.append(model.predict(clean(i.title)))
+    titles = []
+    for k in rows:
+        titles.append(k.title)
+    titles = [clean(x).lower() for x in titles]
+    prediction = model.predict(titles)
     for j in range(len(prediction)):
-        if prediction[j] == ['good']:
+        if prediction[j] == 'good':
             classified_news.append(rows[j])
         else:
             break

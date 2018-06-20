@@ -48,22 +48,23 @@ class NaiveBayesClassifier:
     def predict(self, X):
         """ Perform classification on an array of test vectors X. """
         answers = []
-        words = X.split()
-        predictions = []
+        for doc in X:
+            words = doc.split()
+            predictions = []
 
         # ln(p(C))
-        for label in self.info_labels:
-            apr_prob = self.info_labels[label]['apr_prob']
-            result = log(apr_prob)
+            for label in self.info_labels:
+                apr_prob = self.info_labels[label]['apr_prob']
+                result = log(apr_prob)
 
             # ln(p(w_i|C))
-            for word in words:
-                curr_word = self.info_words.get(word)
-                if curr_word:
-                    result += log(curr_word[label])
-            predictions.append((result, label))
-        score, predicted = max(predictions)
-        answers.append(predicted)
+                for word in words:
+                    curr_word = self.info_words.get(word)
+                    if curr_word:
+                        result += log(curr_word[label])
+                predictions.append((result, label))
+            score, predicted = max(predictions)
+            answers.append(predicted)
 
         return answers
 
